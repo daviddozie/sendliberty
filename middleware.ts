@@ -39,13 +39,15 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  const sessionToken = request.cookies.get("access_token")?.value;
-  const marker = request.cookies.get("logged_in")?.value;
+  if (pathname.startsWith("/dashboard")) {
+    const sessionToken = request.cookies.get("access_token")?.value;
+    const marker = request.cookies.get("logged_in")?.value;
 
-  if (!sessionToken || marker !== "true") {
-    const loginUrl = new URL("/login", request.url);
-    loginUrl.searchParams.set("next", pathname);
-    return NextResponse.redirect(loginUrl);
+    if (!sessionToken || marker !== "true") {
+      const loginUrl = new URL("/login", request.url);
+      loginUrl.searchParams.set("next", pathname);
+      return NextResponse.redirect(loginUrl);
+    }
   }
 
   return NextResponse.next();

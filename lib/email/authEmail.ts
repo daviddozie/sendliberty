@@ -2,7 +2,7 @@ import axiosSrv from "@/lib/axios";
 
 /**
  * Transactional email transport for authentication flows.
- * Uses Sendlib's own REST API (/api/send) with SENDLIB_API_KEY and SENDLIB_FROM.
+ * Uses Sendliberty's own REST API (/api/send) with SENDLIBERTY_API_KEY and SENDLIBERTY_FROM.
  */
 
 export interface AuthEmailInput {
@@ -18,21 +18,21 @@ function getAppUrl(): string {
 }
 
 function getFromAddress(): string {
-  return process.env.SENDLIB_FROM?.trim() || '"Sendliberty" <samueltuoyo9082@gmail.com>';
+  return process.env.SENDLIBERTY_FROM?.trim() || '"Sendliberty" <samueltuoyo9082@gmail.com>';
 }
 
 /**
  * Sends authentication emails (password reset, email verification, welcome)
- * directly through Sendlib's API endpoint.
+ * directly through Sendliberty's API endpoint.
  */
 export async function sendAuthEmail(input: AuthEmailInput): Promise<{ messageId: string | null }> {
-  const apiKey = process.env.SENDLIB_API_KEY?.trim();
+  const apiKey = process.env.SENDLIBERTY_API_KEY?.trim();
 
   if (!apiKey) {
     console.warn(
-      `[auth-email] SENDLIB_API_KEY is not set in environment. ` +
+      `[auth-email] SENDLIBERTY_API_KEY is not set in environment. ` +
         `Auth email to "${input.to}" with subject "${input.subject}" was not sent. ` +
-        `Add SENDLIB_API_KEY and SENDLIB_FROM to your .env file.`
+        `Add SENDLIBERTY_API_KEY and SENDLIBERTY_FROM to your .env file.`
     );
     return { messageId: null };
   }
