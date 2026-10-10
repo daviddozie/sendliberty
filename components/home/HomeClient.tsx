@@ -26,6 +26,23 @@ export default function HomeClient() {
   const [isCopied, setIsCopied] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
+  const rotatingWords = [
+    "Welcome Emails",
+    "Payment Receipts",
+    "Password Resets",
+    "Auth Verification",
+    "Order Confirmations",
+    "User Notifications",
+  ];
+  const [wordIndex, setWordIndex] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setWordIndex((prev) => (prev + 1) % rotatingWords.length);
+    }, 2400);
+    return () => clearInterval(timer);
+  }, [rotatingWords.length]);
+
   const faqs = [
     {
       color: "bg-indigo-500",
@@ -195,24 +212,24 @@ export default function HomeClient() {
             </div>
 
             <div className="relative z-10 max-w-4xl mx-auto flex flex-col items-center w-full">
-              <h1 className="text-[40px] leading-[1.1] md:text-[56px] lg:text-[64px] font-headline-lg-mobile text-center text-white font-extrabold tracking-tight drop-shadow-sm mb-6">
-                <span className="md:hidden">
-                  Zero Domain
-                  <br />
-                  Transactional
-                  <br />
-                  Emails.
+              <h1 className="text-[38px] leading-[1.15] md:text-[56px] lg:text-[64px] font-headline-lg-mobile text-center text-white font-extrabold tracking-tight drop-shadow-sm mb-6">
+                Send{" "}
+                <span className="inline-block relative overflow-hidden align-top text-emerald-400 min-w-[260px] md:min-w-[420px] text-center">
+                  <span
+                    key={wordIndex}
+                    className="inline-block animate-in fade-in slide-in-from-bottom-2 duration-300"
+                  >
+                    {rotatingWords[wordIndex]}
+                  </span>
                 </span>
-                <span className="hidden md:block">
-                  Send Transactional Emails
-                  <br />
-                  Without Needing a Domain.
-                </span>
+                <br />
+                Without Needing a Domain.
               </h1>
 
-              <p className="font-body-lg text-base md:text-lg max-w-[600px] text-center text-secondary leading-relaxed mb-10 px-4 md:px-0">
-                The fastest way for founders and devs to send transactional emails using their
-                product's existing Gmail. Zero domains needed. Zero stress.
+              <p className="font-body-lg text-base md:text-lg max-w-[620px] text-center text-secondary leading-relaxed mb-10 px-4 md:px-0">
+                Deploying to Render or hosts where outbound SMTP ports are blocked? Sendliberty
+                turns your product&apos;s existing Gmail into a reliable email API. Send up to 2,000
+                emails a day with zero DNS friction.
               </p>
 
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2 mb-4 md:mb-16 w-full">
@@ -565,67 +582,166 @@ export default function HomeClient() {
       </main>
 
       {/* Footer */}
-      <footer className="w-full mt-auto bg-surface-container border-t border-outline-variant">
-        <div className="flex flex-col md:flex-row justify-between items-start px-margin-mobile md:px-margin-desktop py-xl gap-10 max-w-7xl mx-auto">
-          <div className="flex flex-col gap-xs text-left">
-            <span className="text-xl font-headline-md font-bold tracking-tight text-white">
-              Sendliberty
-            </span>
-            <p className="font-label-sm text-label-sm text-on-surface-variant max-w-[250px] md:max-w-none">
-              © 2026 Sendliberty. All rights reserved.
-            </p>
-          </div>
-          <div className="flex flex-col sm:flex-row gap-8 sm:gap-16 w-full md:w-auto">
-            <div className="flex flex-col gap-3 text-left">
-              <span className="text-xs font-bold uppercase tracking-wider text-secondary">
-                Product
-              </span>
-              <a
-                href="https://github.com/samueltuoyo15/sendliberty"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-label-sm text-label-sm text-on-surface-variant hover:text-primary-sendlib transition-colors flex items-center gap-1.5"
-              >
-                <HugeiconsIcon icon={GithubIcon} size={14} />
-                GitHub
-              </a>
-              <Link
-                href="/docs"
-                className="font-label-sm text-label-sm text-on-surface-variant hover:text-primary-sendlib transition-colors"
-              >
-                Documentation
+      <footer className="w-full mt-auto bg-[#0a0a0a] border-t border-white/10 relative overflow-hidden">
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-6 sm:px-10 lg:px-16 pt-16 pb-28 md:pb-36">
+          <div className="flex flex-col lg:flex-row justify-between items-start gap-12 lg:gap-16">
+            {/* Left Brand Column */}
+            <div className="flex flex-col items-start text-left w-full lg:w-72 lg:shrink-0">
+              <Link href="/" className="flex items-center gap-2.5 mb-4 group">
+                <div className="w-8 h-8 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center overflow-hidden">
+                  <Image
+                    src="/icon.png"
+                    alt="Sendliberty"
+                    width={22}
+                    height={22}
+                    className="object-contain"
+                  />
+                </div>
+                <span className="text-xl font-bold tracking-tight text-white group-hover:text-emerald-400 transition-colors">
+                  Sendliberty
+                </span>
               </Link>
-              <a
-                href="mailto:hello@samueltuoyo.com"
-                className="font-label-sm text-label-sm text-on-surface-variant hover:text-primary-sendlib transition-colors"
-              >
-                Contact Support
-              </a>
+
+              <p className="text-sm text-zinc-400 leading-relaxed mb-6">
+                Send receipts, welcome notes, and auth emails straight through your existing Gmail
+                without verifying custom domains or fighting blocked outbound SMTP ports.
+              </p>
+
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-zinc-800 bg-zinc-900 text-xs text-zinc-300 font-medium mb-6">
+                <span>🇺🇸</span>
+                <span>English (US)</span>
+              </div>
+
+              <p className="text-xs text-zinc-500">© 2026 Sendliberty Inc. All rights reserved.</p>
             </div>
-            <div className="flex flex-col gap-3 text-left">
-              <span className="text-xs font-bold uppercase tracking-wider text-secondary">
-                Legal
-              </span>
-              <Link
-                href="/privacy-policy"
-                className="font-label-sm text-label-sm text-on-surface-variant hover:text-primary-sendlib transition-colors"
-              >
-                Privacy Policy
-              </Link>
-              <Link
-                href="/terms-of-service"
-                className="font-label-sm text-label-sm text-on-surface-variant hover:text-primary-sendlib transition-colors"
-              >
-                Terms of Service
-              </Link>
-              <Link
-                href="/refund"
-                className="font-label-sm text-label-sm text-on-surface-variant hover:text-primary-sendlib transition-colors"
-              >
-                Refund Policy
-              </Link>
+
+            {/* Right Links Columns */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-8 sm:gap-12 lg:gap-16 text-left">
+              {/* Product */}
+              <div className="flex flex-col gap-3 min-w-[110px]">
+                <span className="text-xs font-bold uppercase tracking-wider text-white">
+                  PRODUCT
+                </span>
+                <Link
+                  href="#features"
+                  className="text-sm text-zinc-400 hover:text-white transition-colors"
+                >
+                  Features
+                </Link>
+                <Link
+                  href="#pricing"
+                  className="text-sm text-zinc-400 hover:text-white transition-colors"
+                >
+                  Pricing
+                </Link>
+                <Link
+                  href="#how-it-works"
+                  className="text-sm text-zinc-400 hover:text-white transition-colors"
+                >
+                  How it works
+                </Link>
+                <Link
+                  href="/login"
+                  className="text-sm text-zinc-400 hover:text-white transition-colors"
+                >
+                  Sign in
+                </Link>
+                <a
+                  href="https://github.com/samueltuoyo15/sendliberty"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm text-zinc-400 hover:text-white transition-colors flex items-center gap-1.5"
+                >
+                  <HugeiconsIcon icon={GithubIcon} size={14} />
+                  GitHub
+                </a>
+              </div>
+
+              {/* Company */}
+              <div className="flex flex-col gap-3 min-w-[110px]">
+                <span className="text-xs font-bold uppercase tracking-wider text-white">
+                  COMPANY
+                </span>
+                <Link
+                  href="#features"
+                  className="text-sm text-zinc-400 hover:text-white transition-colors"
+                >
+                  About Us
+                </Link>
+                <Link
+                  href="/docs"
+                  className="text-sm text-zinc-400 hover:text-white transition-colors"
+                >
+                  Changelog
+                </Link>
+                <a
+                  href="mailto:hello@samueltuoyo.com?subject=Careers"
+                  className="text-sm text-zinc-400 hover:text-white transition-colors"
+                >
+                  Careers
+                </a>
+                <a
+                  href="mailto:hello@samueltuoyo.com"
+                  className="text-sm text-zinc-400 hover:text-white transition-colors"
+                >
+                  Contact
+                </a>
+              </div>
+
+              {/* Support */}
+              <div className="flex flex-col gap-3 min-w-[110px]">
+                <span className="text-xs font-bold uppercase tracking-wider text-white">
+                  SUPPORT
+                </span>
+                <Link
+                  href="/docs"
+                  className="text-sm text-zinc-400 hover:text-white transition-colors"
+                >
+                  Help Center
+                </Link>
+                <Link
+                  href="/docs/quickstart"
+                  className="text-sm text-zinc-400 hover:text-white transition-colors"
+                >
+                  Contact Support
+                </Link>
+                <a
+                  href="mailto:hello@samueltuoyo.com"
+                  className="text-sm text-zinc-400 hover:text-white transition-colors"
+                >
+                  Email Support
+                </a>
+              </div>
+
+              {/* Legal */}
+              <div className="flex flex-col gap-3 min-w-[110px]">
+                <span className="text-xs font-bold uppercase tracking-wider text-white">LEGAL</span>
+                <Link
+                  href="/terms-of-service"
+                  className="text-sm text-zinc-400 hover:text-white transition-colors"
+                >
+                  Terms of Service
+                </Link>
+                <Link
+                  href="/privacy-policy"
+                  className="text-sm text-zinc-400 hover:text-white transition-colors"
+                >
+                  Privacy Policy
+                </Link>
+                <Link
+                  href="/refund"
+                  className="text-sm text-zinc-400 hover:text-white transition-colors"
+                >
+                  Refund Policy
+                </Link>
+              </div>
             </div>
           </div>
+        </div>
+
+        {/* Large Background Watermark Text - Subtle and anchored cleanly at bottom */}
+        <div className="pointer-events-none absolute bottom-[-30%] left-1/2 -translate-x-1/2 select-none text-[15vw] font-black tracking-tight text-white/[0.07] leading-none whitespace-nowrap z-0">
+          SENDLIBERTY
         </div>
       </footer>
     </div>

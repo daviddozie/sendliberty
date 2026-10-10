@@ -1,4 +1,4 @@
-# Sendlib: Transactional Email API for Your Customers 
+# Sendliberty: Transactional Email API for Your Customers 
 
 The fastest way for founders and devs to send transactional emails to your customers (welcome messages, password resets, receipts) using their product's existing Gmail account. Zero domains to verify. Zero stress. Just connect and send.
 
@@ -6,14 +6,14 @@ The fastest way for founders and devs to send transactional emails to your custo
 
 <a href="https://res.cloudinary.com/dpswl8vzgkk/video/upload/q_auto/v1786180780/fadfas_fakwqx.mp4" target="_blank">
   <br />
-  <b>🎥 Click here to watch the 60-second Sendlib demo</b>
+  <b>🎥 Click here to watch the 60-second Sendliberty demo</b>
 </a>
 
 ## Features
 
 ### Secure Gmail Integration
 
-Easily connect your personal or Google Workspace Gmail accounts using secure OAuth 2.0. Sendlib only requests the minimum necessary permissions to send emails on your behalf, and your credentials are never stored directly. This approach ensures high deliverability, as emails are sent from a trusted Google server.
+Easily connect your personal or Google Workspace Gmail accounts using secure OAuth 2.0. Sendliberty only requests the minimum necessary permissions to send emails on your behalf, and your credentials are never stored directly. This approach ensures high deliverability, as emails are sent from a trusted Google server.
 
 ```mermaid
 sequenceDiagram
@@ -39,7 +39,7 @@ sequenceDiagram
 
 ### Effortless Email Sending via API
 
-Send transactional emails with a single, straightforward REST API call. Whether you're sending welcome emails, password resets, or notifications, Sendlib handles the delivery without needing any SMTP port configuration.
+Send transactional emails with a single, straightforward REST API call. Whether you're sending welcome emails, password resets, or notifications, Sendliberty handles the delivery without needing any SMTP port configuration.
 
 ```mermaid
 sequenceDiagram
@@ -73,7 +73,7 @@ Keep an eye on your email sending activity with a dashboard that provides daily 
 
 ## System Architecture / Design
 
-Sendlib leverages a Next.js application for both its frontend dashboard and backend API routes. User authentication is handled via GitHub or Google OAuth, and connected Gmail accounts are used to relay emails through the Gmail API. All user and application data is persisted in a MongoDB database.
+Sendliberty leverages a Next.js application for both its frontend dashboard and backend API routes. User authentication is handled via GitHub or Google OAuth, and connected Gmail accounts are used to relay emails through the Gmail API. All user and application data is persisted in a MongoDB database.
 
 ```mermaid
 flowchart LR
@@ -111,7 +111,7 @@ flowchart LR
 
 ## Installation
 
-To get Sendlib up and running on your local machine, follow these steps:
+To get Sendliberty up and running on your local machine, follow these steps:
 
 1.  **Clone the Repository**:
     ```bash
@@ -137,9 +137,9 @@ To get Sendlib up and running on your local machine, follow these steps:
     JWT_SECRET=your_random_64_char_hex_string_here
     ENCRYPTION_KEY=a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2
 
-    # System Emails (via Sendlib Dogfooding)
-    SENDLIB_API_KEY=sl_...
-    SENDLIB_FROM="Sendlib" <youremail@gmail.com>
+    # System Emails (via Sendliberty Dogfooding)
+    SENDLIBERTY_API_KEY=sl_...
+    SENDLIBERTY_FROM="Sendliberty" <youremail@gmail.com>
 
     # Google OAuth (for login AND Gmail connect same credentials)
     GOOGLE_CLIENT_ID=your_google_client_id
@@ -164,7 +164,7 @@ To get Sendlib up and running on your local machine, follow these steps:
     *   **MONGODB\_URI**: Your MongoDB connection string.
     *   **JWT\_SECRET**: A long, random string for JWT signing. You can generate one with `node -e "console.log(crypto.randomBytes(32).toString('hex'))"`.
     *   **ENCRYPTION\_KEY**: A 64-character hex string (32 bytes) for encrypting sensitive data like Gmail tokens. Generate with `node -e "console.log(crypto.randomBytes(32).toString('hex'))"`.
-    *   **SENDLIB_API_KEY** / **SENDLIB_FROM**: Used for system transactional emails (auth, 2FA, password resets). Go to [sendlib.samueltuoyo.com](https://sendlib.samueltuoyo.com), log in, and generate an API key to use here. Set the From address to your connected Gmail account.
+    *   **SENDLIBERTY_API_KEY** / **SENDLIBERTY_FROM**: Used for system transactional emails (auth, 2FA, password resets). Go to [sendliberty.com](https://sendliberty.com), log in, and generate an API key to use here. Set the From address to your connected Gmail account. (Legacy `SENDLIB_API_KEY` / `SENDLIB_FROM` also supported).
     *   **REDIS_URL**: Enables shared rate limiting across instances; without it, the app falls back to in-process limits.
     *   **GOOGLE\_CLIENT\_ID** / **GOOGLE\_CLIENT\_SECRET**: Obtain these from the Google Cloud Console for OAuth. Make sure to add `http://localhost:3000/api/auth/google/callback` and `http://localhost:3000/api/gmail/callback` to your authorized redirect URIs.
     *   **GITHUB\_CLIENT\_ID** / **GITHUB\_CLIENT\_SECRET**: Obtain these from your GitHub OAuth Apps settings. Add `http://localhost:3000/api/auth/github/callback` to your authorized redirect URIs.
@@ -180,7 +180,7 @@ To get Sendlib up and running on your local machine, follow these steps:
 
 ## Usage
 
-Once your Sendlib instance is running and you've connected a Gmail account and generated an API key from the dashboard, you can start sending emails via the `/api/send` endpoint.
+Once your Sendliberty instance is running and you've connected a Gmail account and generated an API key from the dashboard, you can start sending emails via the `/api/send` endpoint.
 
 Here's how you can use the API in various languages:
 
@@ -193,9 +193,9 @@ curl -X POST http://localhost:3000/api/send \
   -d '{
     "from": "sender@gmail.com",
     "to": "user@example.com",
-    "subject": "Hello via Sendlib Webhook!",
-    "html": "<p>This email was sent with <strong>Sendlib</strong>, delivering straight to your customers!</p>",
-    "text": "This email was sent with Sendlib, delivering straight to your customers!",
+    "subject": "Hello via Sendliberty Webhook!",
+    "html": "<p>This email was sent with <strong>Sendliberty</strong>, delivering straight to your customers!</p>",
+    "text": "This email was sent with Sendliberty, delivering straight to your customers!",
     "replyTo": "support@yourdomain.com",
     "cc": "anotheruser@example.com",
     "bcc": ["audit@example.com"],
@@ -221,9 +221,9 @@ const response = await fetch('http://localhost:3000/api/send', {
   body: JSON.stringify({
     from: 'sender@gmail.com',
     to: 'user@example.com',
-    subject: 'Hello via Sendlib Webhook!',
-    html: '<p>This email was sent with <strong>Sendlib</strong>, delivering straight to your customers!</p>',
-    text: 'This email was sent with Sendlib, delivering straight to your customers!',
+    subject: 'Hello via Sendliberty Webhook!',
+    html: '<p>This email was sent with <strong>Sendliberty</strong>, delivering straight to your customers!</p>',
+    text: 'This email was sent with Sendliberty, delivering straight to your customers!',
     replyTo: 'support@yourdomain.com',
     cc: 'anotheruser@example.com',
     bcc: ['audit@example.com'],
@@ -255,9 +255,9 @@ headers = {
 payload = {
   "from": "sender@gmail.com",
   "to": "user@example.com",
-  "subject": "Hello via Sendlib Webhook!",
-  "html": "<p>This email was sent with <strong>Sendlib</strong>, delivering straight to your customers!</p>",
-  "text": "This email was sent with Sendlib, delivering straight to your customers!",
+  "subject": "Hello via Sendliberty Webhook!",
+  "html": "<p>This email was sent with <strong>Sendliberty</strong>, delivering straight to your customers!</p>",
+  "text": "This email was sent with Sendliberty, delivering straight to your customers!",
   "replyTo": "support@yourdomain.com",
   "cc": "anotheruser@example.com",
   "bcc": ["audit@example.com"],
@@ -290,9 +290,9 @@ func main() {
 	payload := map[string]interface{}{
 		"from":    "sender@gmail.com",
 		"to":      "user@example.com",
-		"subject": "Hello via Sendlib Webhook!",
-		"html":    "<p>This email was sent with <strong>Sendlib</strong>, delivering straight to your customers!</p>",
-		"text":    "This email was sent with Sendlib, delivering straight to your customers!",
+		"subject": "Hello via Sendliberty Webhook!",
+		"html":    "<p>This email was sent with <strong>Sendliberty</strong>, delivering straight to your customers!</p>",
+		"text":    "This email was sent with Sendliberty, delivering straight to your customers!",
 		"replyTo": "support@yourdomain.com",
 		"cc":      "anotheruser@example.com",
 		"bcc":     []string{"audit@example.com"},
@@ -336,9 +336,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let payload = json!({
         "from": "sender@gmail.com",
         "to": "user@example.com",
-        "subject": "Hello via Sendlib Webhook!",
-        "html": "<p>This email was sent with <strong>Sendlib</strong>, delivering straight to your customers!</p>",
-        "text": "This email was sent with Sendlib, delivering straight to your customers!",
+        "subject": "Hello via Sendliberty Webhook!",
+        "html": "<p>This email was sent with <strong>Sendliberty</strong>, delivering straight to your customers!</p>",
+        "text": "This email was sent with Sendliberty, delivering straight to your customers!",
         "replyTo": "support@yourdomain.com",
         "cc": "anotheruser@example.com",
         "bcc": ["audit@example.com"],
@@ -374,9 +374,9 @@ $apiKey = 'YOUR_SECRET_API_KEY';
 $payload = [
     'from' => 'sender@gmail.com',
     'to' => 'user@example.com',
-    'subject' => 'Hello via Sendlib Webhook!',
-    'html' => '<p>This email was sent with <strong>Sendlib</strong>, delivering straight to your customers!</p>',
-    'text' => 'This email was sent with Sendlib, delivering straight to your customers!',
+    'subject' => 'Hello via Sendliberty Webhook!',
+    'html' => '<p>This email was sent with <strong>Sendliberty</strong>, delivering straight to your customers!</p>',
+    'text' => 'This email was sent with Sendliberty, delivering straight to your customers!',
     'replyTo' => 'support@yourdomain.com',
     'cc' => 'anotheruser@example.com',
     'bcc' => ['audit@example.com'],
@@ -429,9 +429,9 @@ public class EmailSender
         {
             from = "sender@gmail.com",
             to = "user@example.com",
-            subject = "Hello via Sendlib Webhook!",
-            html = "<p>This email was sent with <strong>Sendlib</strong>, delivering straight to your customers!</p>",
-            text = "This email was sent with Sendlib, delivering straight to your customers!",
+            subject = "Hello via Sendliberty Webhook!",
+            html = "<p>This email was sent with <strong>Sendliberty</strong>, delivering straight to your customers!</p>",
+            text = "This email was sent with Sendliberty, delivering straight to your customers!",
             replyTo = "support@yourdomain.com",
             cc = "anotheruser@example.com",
             bcc = new[] { "audit@example.com" },
@@ -475,9 +475,9 @@ public class EmailSender {
             {
               "from": "sender@gmail.com",
               "to": "user@example.com",
-              "subject": "Hello via Sendlib Webhook!",
-              "html": "<p>This email was sent with <strong>Sendlib</strong>, delivering straight to your customers!</p>",
-              "text": "This email was sent with Sendlib, delivering straight to your customers!",
+              "subject": "Hello via Sendliberty Webhook!",
+              "html": "<p>This email was sent with <strong>Sendliberty</strong>, delivering straight to your customers!</p>",
+              "text": "This email was sent with Sendliberty, delivering straight to your customers!",
               "replyTo": "support@yourdomain.com",
               "cc": "anotheruser@example.com",
               "bcc": ["audit@example.com"],
