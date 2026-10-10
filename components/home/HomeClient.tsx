@@ -228,7 +228,7 @@ export default function HomeClient() {
 
               <p className="font-body-lg text-base md:text-lg max-w-[620px] text-center text-secondary leading-relaxed mb-10 px-4 md:px-0">
                 Deploying to Render or hosts where outbound SMTP ports are blocked? Sendliberty
-                turns your product&apos;s existing Gmail into a reliable email API. Send up to 2,000
+                turns your product&apos;s existing Gmail into a reliable email API. Send up to 500
                 emails a day with zero DNS friction.
               </p>
 
