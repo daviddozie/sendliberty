@@ -1,11 +1,14 @@
 import { isOriginAllowed } from "@/lib/apiKeyOrigins";
 import { assertSenderScope } from "@/lib/apiKeyScope";
+import { checkCircuitBreaker } from "@/lib/circuitBreaker";
 import { connectDB } from "@/lib/db";
 import { type DebugStep, analyzeHtmlIssues } from "@/lib/emailDebugger";
+import { validateRecipientList } from "@/lib/emailValidation";
 import { GmailBurstLimitError, sendGmailEmail } from "@/lib/gmail";
 import { getEffectiveUserPlan } from "@/lib/paystack";
 import { rateLimit } from "@/lib/rateLimit";
 import { readJsonBody } from "@/lib/requestBody";
+import { findFirstSuppressedEmail } from "@/lib/suppression";
 import { interpolate, isValidSlug } from "@/lib/templates";
 import ApiKey, { IApiKey } from "@/models/ApiKey";
 import EmailTemplate from "@/models/EmailTemplate";
@@ -364,6 +367,50 @@ export async function POST(req: NextRequest) {
           message: `Too many 'bcc' recipients. Max ${MAX_RECIPIENTS} per request.`,
         },
         { status: 400 }
+      );
+    }
+
+    // --- Validate recipient formats & filter disposable domains ---
+    const toVal = validateRecipientList(toArr, "'to'");
+    if (!toVal.valid) {
+      return NextResponse.json({ success: false, message: toVal.error }, { status: 400 });
+    }
+    const ccVal = validateRecipientList(ccArr, "'cc'");
+    if (!ccVal.valid) {
+      return NextResponse.json({ success: false, message: ccVal.error }, { status: 400 });
+    }
+    const bccVal = validateRecipientList(bccArr, "'bcc'");
+    if (!bccVal.valid) {
+      return NextResponse.json({ success: false, message: bccVal.error }, { status: 400 });
+    }
+
+    // --- Circuit breaker check for sender account ---
+    const breaker = await checkCircuitBreaker(from);
+    if (breaker.open) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: `Sending is temporarily paused for '${from}' due to an elevated bounce rate. This protects your Google account from being flagged. Try again in ${breaker.remainingSeconds}s.`,
+        },
+        {
+          status: 429,
+          headers: {
+            "Retry-After": String(breaker.remainingSeconds ?? 900),
+          },
+        }
+      );
+    }
+
+    // --- Suppression list check ---
+    const allRecipients = [...toVal.cleanEmails, ...ccVal.cleanEmails, ...bccVal.cleanEmails];
+    const suppressed = await findFirstSuppressedEmail(authenticatedUserId, allRecipients);
+    if (suppressed) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: `Recipient '${suppressed.email}' is suppressed due to a previous ${suppressed.reason}. Remove this recipient to proceed.`,
+        },
+        { status: 422 }
       );
     }
 

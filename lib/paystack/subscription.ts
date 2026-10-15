@@ -1,3 +1,5 @@
+import { sendAuthEmail } from "@/lib/email/authEmail";
+import { buildSubscriptionDowngradedEmailHtml } from "@/lib/email/templates.builders";
 import { IUser } from "@/models/User";
 
 /**
@@ -22,6 +24,14 @@ export async function syncUserSubscription(user: IUser): Promise<IUser> {
     user.plan = "free";
     user.subscriptionStatus = user.subscriptionStatus === "canceled" ? "canceled" : "past_due";
     await user.save();
+
+    if (user.email) {
+      sendAuthEmail({
+        to: user.email,
+        subject: "Your Sendliberty account has been downgraded to Free",
+        html: buildSubscriptionDowngradedEmailHtml(user.displayName || ""),
+      }).catch((emailErr) => console.error("Failed to send downgrade email:", emailErr));
+    }
   }
 
   return user;

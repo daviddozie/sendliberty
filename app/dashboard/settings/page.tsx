@@ -38,6 +38,7 @@ export default function SettingsPage() {
   const { data: user, isLoading } = useMe();
   const isPro = user?.plan === "pro";
   const isCanceled = user?.subscriptionStatus === "canceled";
+  const isPastDue = user?.subscriptionStatus === "past_due";
   const { mutate: updateProfile, isPending: isUpdating } = useUpdateProfile();
   const { mutate: logout, isPending: isLoggingOut } = useLogout();
   const [editName, setEditName] = useState("");
@@ -215,9 +216,15 @@ export default function SettingsPage() {
                 </h3>
               </div>
               <span
-                className={`px-2 py-1 rounded-full text-[10px] font-bold text-white uppercase tracking-wider border border-outline-variant/60 ${isCanceled ? "bg-red-500/80" : "bg-surface-container-low"}`}
+                className={`px-2 py-1 rounded-full text-[10px] font-bold text-white uppercase tracking-wider border border-outline-variant/60 ${isCanceled ? "bg-red-500/80" : isPastDue ? "bg-amber-500 text-black font-bold border-amber-600" : "bg-surface-container-low"}`}
               >
-                {isPro ? (isCanceled ? "Pro Plan (Canceled)" : "Pro Plan Active") : "Free Plan"}
+                {isPro
+                  ? isCanceled
+                    ? "Pro Plan (Canceled)"
+                    : isPastDue
+                      ? "Pro Plan (Past Due)"
+                      : "Pro Plan Active"
+                  : "Free Plan"}
               </span>
             </div>
 
@@ -226,7 +233,9 @@ export default function SettingsPage() {
                 {isPro
                   ? isCanceled
                     ? "Your Pro Plan has been canceled and will not renew. You still have access to Pro features until the end of your billing cycle."
-                    : "You're on the Pro Plan (₦4,000/mo). You get 300 req/min, up to 50 connected accounts, 90-day log retention, and batch email sending."
+                    : isPastDue
+                      ? "Your recent renewal payment could not be processed. Update your payment method to keep your Pro daily sending limits (500 emails/day) active."
+                      : "You're on the Pro Plan (₦4,000/mo). You get 300 req/min, up to 50 connected accounts, 90-day log retention, and batch email sending."
                   : "You are on the Free Plan. Upgrade to Pro for ₦4,000/month - unlock 300 req/min, 50 connected accounts, 90-day logs, and batch email sending to up to 1,000 recipients per call."}
               </p>
 
@@ -249,35 +258,56 @@ export default function SettingsPage() {
                   </span>
                 </Button>
               ) : (
-                <div className="flex items-center gap-4">
-                  {!isCanceled && (
+                <div className="space-y-4">
+                  {isPastDue && (
                     <Button
-                      variant="outline"
-                      size="sm"
-                      className="rounded-lg border-red-500/40 text-red-500 hover:bg-red-500/10 text-xs font-bold cursor-pointer"
-                      onClick={() => setCancelSubConfirmOpen(true)}
+                      className="font-label-sm rounded-lg bg-amber-500 hover:bg-amber-600 text-black border-0 font-bold cursor-pointer active:scale-95 transition-all shadow-sm disabled:opacity-50"
+                      onClick={handleCheckout}
+                      disabled={isRedirectingCheckout}
                     >
-                      Cancel Subscription
+                      <HugeiconsIcon
+                        icon={CreditCardIcon}
+                        size={16}
+                        color="currentColor"
+                        strokeWidth={1.5}
+                      />
+                      <span className="ml-2">
+                        {isRedirectingCheckout
+                          ? "Initializing Checkout..."
+                          : "Update Payment / Renew Pro"}
+                      </span>
                     </Button>
                   )}
-                  {(user?.currentPeriodEnd || user?.lastPaymentAt) && (
-                    <span className="text-[10px] font-medium text-secondary">
-                      {isCanceled ? "Access ends on: " : "Renews on: "}
-                      {new Date(
-                        user.currentPeriodEnd
-                          ? user.currentPeriodEnd
-                          : new Date(
-                              new Date(user.lastPaymentAt!).setMonth(
-                                new Date(user.lastPaymentAt!).getMonth() + 1
+                  <div className="flex items-center gap-4">
+                    {!isCanceled && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="rounded-lg border-red-500/40 text-red-500 hover:bg-red-500/10 text-xs font-bold cursor-pointer"
+                        onClick={() => setCancelSubConfirmOpen(true)}
+                      >
+                        Cancel Subscription
+                      </Button>
+                    )}
+                    {(user?.currentPeriodEnd || user?.lastPaymentAt) && (
+                      <span className="text-[10px] font-medium text-secondary">
+                        {isCanceled ? "Access ends on: " : "Renews on: "}
+                        {new Date(
+                          user.currentPeriodEnd
+                            ? user.currentPeriodEnd
+                            : new Date(
+                                new Date(user.lastPaymentAt!).setMonth(
+                                  new Date(user.lastPaymentAt!).getMonth() + 1
+                                )
                               )
-                            )
-                      ).toLocaleDateString("en-US", {
-                        month: "short",
-                        day: "numeric",
-                        year: "numeric",
-                      })}
-                    </span>
-                  )}
+                        ).toLocaleDateString("en-US", {
+                          month: "short",
+                          day: "numeric",
+                          year: "numeric",
+                        })}
+                      </span>
+                    )}
+                  </div>
                 </div>
               )}
             </div>

@@ -212,18 +212,28 @@ export default function HomeClient() {
             </div>
 
             <div className="relative z-10 max-w-4xl mx-auto flex flex-col items-center w-full">
-              <h1 className="text-[38px] leading-[1.15] md:text-[56px] lg:text-[64px] font-headline-lg-mobile text-center text-white font-extrabold tracking-tight drop-shadow-sm mb-6">
-                Send{" "}
-                <span className="inline-block relative overflow-hidden align-top text-emerald-400 min-w-[260px] md:min-w-[420px] text-center">
-                  <span
-                    key={wordIndex}
-                    className="inline-block animate-in fade-in slide-in-from-bottom-2 duration-300"
-                  >
-                    {rotatingWords[wordIndex]}
-                  </span>
+              <h1 className="text-3xl leading-tight sm:text-4xl md:text-[56px] lg:text-[64px] md:leading-[1.15] font-headline-lg-mobile text-center text-white font-extrabold tracking-tight mb-6">
+                {/* Mobile: Rock-solid static headline without awkward word wrapping or layout shifts */}
+                <span className="md:hidden">
+                  Send Transactional Emails
+                  <br />
+                  Without Needing a Domain.
                 </span>
-                <br />
-                Without Needing a Domain.
+
+                {/* Desktop: Dynamic rotating words with full width */}
+                <span className="hidden md:inline">
+                  Send{" "}
+                  <span className="inline-block relative overflow-hidden align-top text-emerald-400 min-w-[420px] text-center">
+                    <span
+                      key={wordIndex}
+                      className="inline-block animate-in fade-in slide-in-from-bottom-2 duration-300"
+                    >
+                      {rotatingWords[wordIndex]}
+                    </span>
+                  </span>
+                  <br />
+                  Without Needing a Domain.
+                </span>
               </h1>
 
               <p className="font-body-lg text-base md:text-lg max-w-[620px] text-center text-secondary leading-relaxed mb-10 px-4 md:px-0">

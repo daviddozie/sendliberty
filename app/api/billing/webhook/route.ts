@@ -1,4 +1,6 @@
 import { connectDB } from "@/lib/db";
+import { sendAuthEmail } from "@/lib/email/authEmail";
+import { buildPaymentFailedDunningEmailHtml } from "@/lib/email/templates.builders";
 import { verifyPaystackSignature } from "@/lib/paystack";
 import { isValidSubscriptionPayment } from "@/lib/paystack/validation";
 import User from "@/models/User";
@@ -136,6 +138,14 @@ export async function POST(req: NextRequest) {
     } else if (event === "invoice.payment_failed") {
       user.set("subscriptionStatus", "past_due");
       await user.save();
+
+      if (user.email) {
+        sendAuthEmail({
+          to: user.email,
+          subject: "Action required: Your Sendliberty Pro limits will drop tomorrow",
+          html: buildPaymentFailedDunningEmailHtml(user.displayName || ""),
+        }).catch((emailErr) => console.error("Failed to send dunning email:", emailErr));
+      }
     }
 
     return NextResponse.json({ received: true });

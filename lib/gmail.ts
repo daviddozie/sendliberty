@@ -2,10 +2,12 @@ import crypto from "crypto";
 import dns from "dns";
 import { assertSenderScope, senderEmailAddress } from "@/lib/apiKeyScope";
 import axiosSrv from "@/lib/axios";
+import { recordDispatchResult } from "@/lib/circuitBreaker";
 import type { DebugIssue, DebugReport, DebugStep } from "@/lib/emailDebugger";
 import { buildDebugReport } from "@/lib/emailDebugger";
 import { getEffectiveUserPlan } from "@/lib/paystack";
 import { connectToRedis } from "@/lib/redis";
+import { addEmailToSuppression } from "@/lib/suppression";
 import ApiKey from "@/models/ApiKey";
 import EmailLog from "@/models/EmailLog";
 import GmailAccount from "@/models/GmailAccount";
@@ -569,6 +571,8 @@ export async function sendGmailEmail(
       expiresAt,
     });
 
+    void recordDispatchResult(senderEmail, "success");
+
     return { messageId: result.data.id ?? null, debug };
   } catch (err: unknown) {
     if (!acceptedByGmail) {
@@ -583,6 +587,20 @@ export async function sendGmailEmail(
     } else if (err instanceof Error) {
       errMsg = err.message;
     }
+
+    const isBounceError =
+      /550|recipient.*rejected|user.*unknown|mailbox.*unavailable|invalid.*recipient|domain.*not.*found/i.test(
+        errMsg
+      );
+
+    if (isBounceError) {
+      void recordDispatchResult(senderEmail, "bounce");
+      const recipients = Array.isArray(options.to) ? options.to : [options.to];
+      for (const r of recipients) {
+        void addEmailToSuppression(userId, r, "bounce", errMsg);
+      }
+    }
+
     const expiresAt = new Date();
     expiresAt.setDate(expiresAt.getDate() + (options.retentionDays ?? 5));
     const debug = finalizeDebug(options, [

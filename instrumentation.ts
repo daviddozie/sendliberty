@@ -36,5 +36,10 @@ export async function register() {
 
     startBatchResumer();
     console.log("Batch resumer cron started successfully.");
+
+    // Subscription worker, sweeps and downgrades expired accounts periodically
+    const { startSubscriptionWorker } = await import("./lib/subscriptionWorker");
+    startSubscriptionWorker();
+    console.log("Subscription sweep worker started successfully.");
   }
 }

@@ -45,6 +45,12 @@ vi.mock("@/models/ApiKey", () => ({
   },
 }));
 vi.mock("@/models/BatchJob", () => ({ default: { create: mocks.job } }));
+vi.mock("@/lib/circuitBreaker", () => ({
+  checkCircuitBreaker: async () => ({ open: false }),
+}));
+vi.mock("@/lib/suppression", () => ({
+  findFirstSuppressedEmail: async () => null,
+}));
 
 const owner = "507f1f77bcf86cd799439011";
 const keyId = "507f1f77bcf86cd799439012";

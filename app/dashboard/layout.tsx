@@ -254,7 +254,29 @@ export default function DashboardLayout({
 
         {/* Content Area */}
         <main className="flex-1 w-full p-4 sm:p-6 lg:p-8 pt-6">
-          <div className="max-w-[1400px] mx-auto w-full">{children}</div>
+          <div className="max-w-[1400px] mx-auto w-full">
+            {user.subscriptionStatus === "past_due" && (
+              <div className="mb-6 rounded-xl border border-amber-500/40 bg-amber-500/10 p-4 text-amber-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div className="flex items-start sm:items-center gap-3">
+                  <div className="h-2 w-2 rounded-full bg-amber-400 shrink-0 mt-1.5 sm:mt-0" />
+                  <div>
+                    <p className="text-sm font-semibold text-amber-300">Payment renewal failed</p>
+                    <p className="text-xs text-amber-200/80 mt-0.5">
+                      Your Pro subscription payment could not be processed. Update your card to keep
+                      your daily sending limit (500 emails/day) and avoid API interruptions.
+                    </p>
+                  </div>
+                </div>
+                <Link
+                  href="/dashboard/settings"
+                  className="shrink-0 inline-flex items-center justify-center rounded-lg bg-amber-400 px-4 py-2 text-xs font-bold text-black hover:bg-amber-300 transition-colors"
+                >
+                  Update Payment
+                </Link>
+              </div>
+            )}
+            {children}
+          </div>
         </main>
 
         <SearchModal />

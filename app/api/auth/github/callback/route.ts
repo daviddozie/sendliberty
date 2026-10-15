@@ -77,6 +77,8 @@ export async function GET(req: NextRequest) {
         user.githubId = githubId;
         user.avatar = profile.avatar_url;
         user.displayName = profile.name ?? profile.login;
+        user.emailVerified = true;
+        if (!user.emailVerifiedAt) user.emailVerifiedAt = new Date();
         await user.save();
       }
     }
@@ -87,12 +89,14 @@ export async function GET(req: NextRequest) {
         email: normalizedEmail ?? undefined,
         displayName: profile.name ?? profile.login,
         avatar: profile.avatar_url,
-        emailVerified: Boolean(normalizedEmail),
-        emailVerifiedAt: normalizedEmail ? new Date() : undefined,
+        emailVerified: true,
+        emailVerifiedAt: new Date(),
       });
     } else {
       user.avatar = profile.avatar_url;
       user.displayName = profile.name ?? profile.login;
+      user.emailVerified = true;
+      if (!user.emailVerifiedAt) user.emailVerifiedAt = new Date();
       if (normalizedEmail) user.email = normalizedEmail;
       await user.save();
     }

@@ -70,6 +70,8 @@ export async function GET(req: NextRequest) {
         user.googleId = id;
         user.avatar = picture ?? user.avatar;
         user.displayName = name ?? user.displayName;
+        user.emailVerified = true;
+        if (!user.emailVerifiedAt) user.emailVerifiedAt = new Date();
         await user.save();
       }
     }
@@ -80,12 +82,14 @@ export async function GET(req: NextRequest) {
         email: normalizedEmail ?? undefined,
         displayName: name ?? normalizedEmail ?? "User",
         avatar: picture ?? undefined,
-        emailVerified: Boolean(normalizedEmail),
-        emailVerifiedAt: normalizedEmail ? new Date() : undefined,
+        emailVerified: true,
+        emailVerifiedAt: new Date(),
       });
     } else {
       user.avatar = picture ?? user.avatar;
       user.displayName = name ?? user.displayName;
+      user.emailVerified = true;
+      if (!user.emailVerifiedAt) user.emailVerifiedAt = new Date();
       if (normalizedEmail) user.email = normalizedEmail;
       await user.save();
     }

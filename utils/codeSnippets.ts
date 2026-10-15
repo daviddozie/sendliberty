@@ -8,7 +8,7 @@ export const getCodeSnippet = (tab: CodeTab, isExpanded: boolean, apiUrl: string
   -H "Authorization: Bearer YOUR_KEY" \\
   -H "Content-Type: application/json" \\
   -d '{
-    "from": "sender@gmail.com",
+    "from": "Your Brand <sender@gmail.com>",
     "to": "user@example.com",
     "subject": "Hello via Webhook!",
     "html": "<p>No SMTP needed.</p>",
@@ -23,7 +23,7 @@ export const getCodeSnippet = (tab: CodeTab, isExpanded: boolean, apiUrl: string
   -H "Authorization: Bearer YOUR_KEY" \\
   -H "Content-Type: application/json" \\
   -d '{
-    "from": "sender@gmail.com",
+    "from": "Your Brand <sender@gmail.com>",
     "to": "user@example.com",
     "subject": "Hello via Webhook!",
     "html": "<p>No SMTP needed.</p>"
@@ -38,7 +38,7 @@ export const getCodeSnippet = (tab: CodeTab, isExpanded: boolean, apiUrl: string
     'Content-Type': 'application/json'
   },
   body: JSON.stringify({
-    from: 'sender@gmail.com',
+    from: 'Your Brand <sender@gmail.com>',
     to: 'user@example.com',
     subject: 'Hello via Webhook!',
     html: '<p>No SMTP needed.</p>',
@@ -57,7 +57,7 @@ export const getCodeSnippet = (tab: CodeTab, isExpanded: boolean, apiUrl: string
     'Content-Type': 'application/json'
   },
   body: JSON.stringify({
-    from: 'sender@gmail.com',
+    from: 'Your Brand <sender@gmail.com>',
     to: 'user@example.com',
     subject: 'Hello via Webhook!',
     html: '<p>No SMTP needed.</p>'
@@ -74,7 +74,7 @@ headers = {
   "Content-Type": "application/json"
 }
 payload = {
-  "from": "sender@gmail.com",
+  "from": "Your Brand <sender@gmail.com>",
   "to": "user@example.com",
   "subject": "Hello via Webhook!",
   "html": "<p>No SMTP needed.</p>",
@@ -95,7 +95,7 @@ headers = {
   "Content-Type": "application/json"
 }
 payload = {
-  "from": "sender@gmail.com",
+  "from": "Your Brand <sender@gmail.com>",
   "to": "user@example.com",
   "subject": "Hello via Webhook!",
   "html": "<p>No SMTP needed.</p>"
@@ -115,7 +115,7 @@ import (
 
 func main() {
   payload, _ := json.Marshal(map[string]interface{}{
-    "from":    "sender@gmail.com",
+    "from":    "Your Brand <sender@gmail.com>",
     "to":      "user@example.com",
     "subject": "Hello via Webhook!",
     "html":    "<p>No SMTP needed.</p>",
@@ -142,7 +142,7 @@ import (
 
 func main() {
   payload, _ := json.Marshal(map[string]interface{}{
-    "from":    "sender@gmail.com",
+    "from":    "Your Brand <sender@gmail.com>",
     "to":      "user@example.com",
     "subject": "Hello via Webhook!",
     "html":    "<p>No SMTP needed.</p>",
@@ -162,7 +162,7 @@ func main() {
 async fn main() -> Result<(), reqwest::Error> {
   let client = reqwest::Client::new();
   let payload = json!({
-    "from": "sender@gmail.com",
+    "from": "Your Brand <sender@gmail.com>",
     "to": "user@example.com",
     "subject": "Hello via Webhook!",
     "html": "<p>No SMTP needed.</p>",
@@ -188,7 +188,7 @@ async fn main() -> Result<(), reqwest::Error> {
 async fn main() -> Result<(), reqwest::Error> {
   let client = reqwest::Client::new();
   let payload = json!({
-    "from": "sender@gmail.com",
+    "from": "Your Brand <sender@gmail.com>",
     "to": "user@example.com",
     "subject": "Hello via Webhook!",
     "html": "<p>No SMTP needed.</p>"
@@ -214,7 +214,7 @@ curl_setopt($ch, CURLOPT_HTTPHEADER, [
   'Content-Type: application/json'
 ]);
 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
-  'from' => 'sender@gmail.com',
+  'from' => 'Your Brand <sender@gmail.com>',
   'to' => 'user@example.com',
   'subject' => 'Hello via Webhook!',
   'html' => '<p>No SMTP needed.</p>',
@@ -236,7 +236,7 @@ curl_setopt($ch, CURLOPT_HTTPHEADER, [
   'Content-Type: application/json'
 ]);
 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
-  'from' => 'sender@gmail.com',
+  'from' => 'Your Brand <sender@gmail.com>',
   'to' => 'user@example.com',
   'subject' => 'Hello via Webhook!',
   'html' => '<p>No SMTP needed.</p>'
@@ -250,7 +250,7 @@ curl_exec($ch);`;
 client.DefaultRequestHeaders.Add("Authorization", "Bearer YOUR_KEY");
 
 var payload = new {
-  from = "sender@gmail.com",
+  from = "Your Brand <sender@gmail.com>",
   to = "user@example.com",
   subject = "Hello via Webhook!",
   html = "<p>No SMTP needed.</p>",
@@ -263,7 +263,7 @@ var payload = new {
 client.DefaultRequestHeaders.Add("Authorization", "Bearer YOUR_KEY");
 
 var payload = new {
-  from = "sender@gmail.com",
+  from = "Your Brand <sender@gmail.com>",
   to = "user@example.com",
   subject = "Hello via Webhook!",
   html = "<p>No SMTP needed.</p>"
@@ -274,7 +274,7 @@ var payload = new {
         ? `var client = HttpClient.newHttpClient();
 var payload = """
     {
-      "from": "sender@gmail.com",
+      "from": "Your Brand <sender@gmail.com>",
       "to": "user@example.com",
       "subject": "Hello via Webhook!",
       "html": "<p>No SMTP needed.</p>",
@@ -296,7 +296,7 @@ var req = HttpRequest.newBuilder()
         : `var client = HttpClient.newHttpClient();
 var payload = """
     {
-      "from": "sender@gmail.com",
+      "from": "Your Brand <sender@gmail.com>",
       "to": "user@example.com",
       "subject": "Hello via Webhook!",
       "html": "<p>No SMTP needed.</p>"
